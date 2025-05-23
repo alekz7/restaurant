@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -13,31 +13,32 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { ChefHat } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/lib/supabase';
+} from "@/components/ui/card";
+import { ChefHat } from "lucide-react";
+// import { useToast } from '@/components/ui/use-toast';
+// import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 
 export default function SignUpPage() {
   const router = useRouter();
-  const { toast } = useToast();
+  // const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Passwords do not match",
-        variant: "destructive",
-      });
+      // toast({
+      //   title: "Error",
+      //   description: "Passwords do not match",
+      //   variant: "destructive",
+      // });
       return;
     }
 
@@ -48,35 +49,40 @@ export default function SignUpPage() {
         email: formData.email,
         password: formData.password,
       });
+      console.log("Auth Data:", authData);
+      console.log("Auth Error:", authError);
 
       if (authError) throw authError;
 
       if (authData.user) {
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert([
-            {
-              id: authData.user.id,
-              name: formData.name,
-              role: 'customer',
-            }
-          ]);
+        const { error: profileError } = await supabase.from("profiles").insert([
+          {
+            id: authData.user.id,
+            name: formData.name,
+            role: "customer",
+          },
+        ]);
+        console.log("Profile Error:", profileError);
+        console.log("Profile Data:", authData.user.id);
 
         if (profileError) throw profileError;
 
-        toast({
-          title: "Success",
-          description: "Account created successfully!",
-        });
+        // toast({
+        //   title: "Success",
+        //   description: "Account created successfully!",
+        // });
+        console.log("Account created successfully!");
 
-        router.push('/menu');
+        router.push("/menu");
       }
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+      console.error("Error creating account:", error.message);
+      router.push("/menu"); // TODO, Redirect to menu for now fix authentication later
+      // toast({
+      //   title: "Error",
+      //   description: error.message,
+      //   variant: "destructive",
+      // });
     } finally {
       setIsLoading(false);
     }
@@ -91,10 +97,12 @@ export default function SignUpPage() {
             <h1 className="text-2xl font-bold">Culinary Connect</h1>
           </Link>
         </div>
-        
+
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl text-center">Create Account</CardTitle>
+            <CardTitle className="text-2xl text-center">
+              Create Account
+            </CardTitle>
             <CardDescription className="text-center">
               Sign up to start ordering delicious food
             </CardDescription>
@@ -107,7 +115,9 @@ export default function SignUpPage() {
                   id="name"
                   placeholder="John Doe"
                   value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, name: e.target.value }))
+                  }
                   required
                 />
               </div>
@@ -118,7 +128,9 @@ export default function SignUpPage() {
                   type="email"
                   placeholder="you@example.com"
                   value={formData.email}
-                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, email: e.target.value }))
+                  }
                   required
                 />
               </div>
@@ -129,7 +141,12 @@ export default function SignUpPage() {
                   type="password"
                   placeholder="••••••••"
                   value={formData.password}
-                  onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      password: e.target.value,
+                    }))
+                  }
                   required
                 />
               </div>
@@ -140,7 +157,12 @@ export default function SignUpPage() {
                   type="password"
                   placeholder="••••••••"
                   value={formData.confirmPassword}
-                  onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      confirmPassword: e.target.value,
+                    }))
+                  }
                   required
                 />
               </div>
