@@ -1,8 +1,8 @@
 "use client";
 
-import Link from 'next/link';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -10,28 +10,31 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Eye, FileText, MoreHorizontal } from 'lucide-react';
+} from "@/components/ui/table";
+import { Eye, FileText, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { CompanyOrder } from '@/lib/types';
+} from "@/components/ui/dropdown-menu";
+import { CompanyOrder } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 interface CompanyOrdersTableProps {
   orders: CompanyOrder[];
 }
 
-export default function CompanyOrdersTable({ orders }: CompanyOrdersTableProps) {
+export default function CompanyOrdersTable({
+  orders,
+}: CompanyOrdersTableProps) {
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'completed':
+      case "completed":
         return <Badge className="bg-green-500">Completed</Badge>;
-      case 'active':
+      case "active":
         return <Badge className="bg-blue-500">Active</Badge>;
-      case 'pending':
+      case "pending":
         return <Badge className="bg-yellow-500">Pending</Badge>;
       default:
         return <Badge className="bg-gray-500">{status}</Badge>;
@@ -55,13 +58,19 @@ export default function CompanyOrdersTable({ orders }: CompanyOrdersTableProps) 
         <TableBody>
           {orders.map((order) => (
             <TableRow key={order.id}>
-              <TableCell className="font-medium">#{order.id.substring(0, 8)}</TableCell>
+              <TableCell className="font-medium">
+                #{order.id.substring(0, 8)}
+              </TableCell>
               <TableCell>{order.date}</TableCell>
               <TableCell>
-                <span className={cn(
-                  "location-badge",
-                  order.location === "location1" ? "location-badge-1" : "location-badge-2"
-                )}>
+                <span
+                  className={cn(
+                    "location-badge",
+                    order.location === "location1"
+                      ? "location-badge-1"
+                      : "location-badge-2"
+                  )}
+                >
                   {order.location === "location1" ? "Downtown" : "Uptown"}
                 </span>
               </TableCell>

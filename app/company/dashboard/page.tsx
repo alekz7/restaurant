@@ -1,24 +1,54 @@
 "use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BarChart, Calendar, ListOrdered, Users, Plus, MoreHorizontal, Download } from 'lucide-react';
-import MainLayout from '@/components/layouts/main-layout';
-import CompanyOrdersTable from '@/components/company/company-orders-table';
-import CompanySalesChart from '@/components/company/company-sales-chart';
-import { companyOrders } from '@/lib/data/company-orders';
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  BarChart,
+  Calendar,
+  ListOrdered,
+  Users,
+  Plus,
+  MoreHorizontal,
+  Download,
+} from "lucide-react";
+import MainLayout from "@/components/layouts/main-layout";
+import CompanyOrdersTable from "@/components/company/company-orders-table";
+import CompanySalesChart from "@/components/company/company-sales-chart";
+import { companyOrders } from "@/lib/data/company-orders";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 export default function CompanyDashboardPage() {
-  const [selectedPeriod, setSelectedPeriod] = useState('week');
-  
+  const [selectedPeriod, setSelectedPeriod] = useState("week");
+
   // Calculate some statistics
   const totalOrders = companyOrders.length;
   const totalSpent = companyOrders.reduce((sum, order) => sum + order.total, 0);
-  const activeOrders = companyOrders.filter(order => order.status === 'active').length;
-  const employeesParticipated = [...new Set(companyOrders.flatMap(order => order.employeeOrders.map(eo => eo.employeeId)))].length;
+  const activeOrders = companyOrders.filter(
+    (order) => order.status === "active"
+  ).length;
+  const employeesParticipated = [
+    ...new Set(
+      companyOrders.flatMap((order) =>
+        order.employeeOrders.map((eo) => eo.employeeId)
+      )
+    ),
+  ].length;
 
   return (
     <MainLayout>
@@ -46,11 +76,13 @@ export default function CompanyDashboardPage() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>Total Spent</CardDescription>
-              <CardTitle className="text-3xl">${totalSpent.toFixed(2)}</CardTitle>
+              <CardTitle className="text-3xl">
+                ${totalSpent.toFixed(2)}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-xs text-muted-foreground">
@@ -59,7 +91,7 @@ export default function CompanyDashboardPage() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>Active Orders</CardDescription>
@@ -72,11 +104,13 @@ export default function CompanyDashboardPage() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>Employees Participated</CardDescription>
-              <CardTitle className="text-3xl">{employeesParticipated}</CardTitle>
+              <CardTitle className="text-3xl">
+                {employeesParticipated}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-xs text-muted-foreground">
@@ -97,7 +131,10 @@ export default function CompanyDashboardPage() {
                     <Download className="h-4 w-4 mr-2" />
                     Export
                   </Button>
-                  <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                  <Select
+                    value={selectedPeriod}
+                    onValueChange={setSelectedPeriod}
+                  >
                     <SelectTrigger className="w-[120px]">
                       <SelectValue placeholder="Period" />
                     </SelectTrigger>
@@ -115,7 +152,7 @@ export default function CompanyDashboardPage() {
               <CompanySalesChart period={selectedPeriod} />
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
@@ -128,9 +165,15 @@ export default function CompanyDashboardPage() {
                       {index + 1}
                     </div>
                     <div>
-                      <p className="text-sm font-medium">Order #{order.id.substring(0, 8)}</p>
-                      <p className="text-xs text-muted-foreground">{order.date}</p>
-                      <p className="text-xs">{order.employeeOrders.length} employee orders</p>
+                      <p className="text-sm font-medium">
+                        Order #{order.id.substring(0, 8)}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {order.date}
+                      </p>
+                      <p className="text-xs">
+                        {order.employeeOrders.length} employee orders
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -149,9 +192,7 @@ export default function CompanyDashboardPage() {
             <div className="flex justify-between items-center">
               <CardTitle>Recent Orders</CardTitle>
               <Button variant="outline" size="sm" asChild>
-                <Link href="/company/orders">
-                  View All
-                </Link>
+                <Link href="/company/orders">View All</Link>
               </Button>
             </div>
           </CardHeader>
