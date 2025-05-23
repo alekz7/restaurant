@@ -24,6 +24,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from '@/lib/utils';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -73,6 +74,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
           </nav>
           
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             {isAuthenticated ? (
               <>
                 <Link href="/cart">
